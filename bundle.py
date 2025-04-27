@@ -156,8 +156,7 @@ def market_clear_search(students, capacities, max_budget, max_k=10000):
                 if search_error < best_error or best_error == -1:
                     best_error = search_error
                     best_prices = neighbor
-        
-        print(best_error)
+            print(best_error)
 
     return best_error, best_prices
 
