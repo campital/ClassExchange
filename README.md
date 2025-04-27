@@ -3,10 +3,10 @@
 SPORE is a fully-featured course registration system, including a web-based frontend for collecting student preferences and a backend for translating reported preferences and optimizing course allocations.
 
 ## Project Structure
-`SPORE.pdf`: technical background and project overview
-`bundle.py`: implements the full adapted A-CEEI algorithm, optimizing course allocations provided input data in numerical format (currently only operates on randomly-generated data)
-`strict_bundle.py`: implements a simplified version of the A-CEEI algorithm where course bundles are indivisible (only works on special configurations of data)
-`cmu.py`: implements an experimental version of the A-CEEI algorithm using pure MIP (no optimality guarantees)
+- `SPORE.pdf`: technical background and project overview
+- `bundle.py`: implements the full adapted A-CEEI algorithm, optimizing course allocations provided input data in numerical format (currently only operates on randomly-generated data)
+- `strict_bundle.py`: implements a simplified version of the A-CEEI algorithm where course bundles are indivisible (only works on special configurations of data)
+- `cmu.py`: implements an experimental version of the A-CEEI algorithm using pure MIP (no optimality guarantees)
 
 ## Team Members
 - William Volen: team lead, algorithm, backend, written materials
