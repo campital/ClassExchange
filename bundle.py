@@ -76,7 +76,7 @@ def generate_prices(n):
     return [random.random() * 1000 + 500 for i in range(n)]
 
 num_classes = 30
-num_students = 100
+num_students = 500
 students = generate_students(num_students, num_classes)
 capacities = tuple(generate_capacities(num_classes))
 
@@ -94,7 +94,7 @@ def clearing_error(prices, students, capacities):
             tentative = max(tentative, 0)
         total_error_squared += tentative ** 2
     
-    return (math.sqrt(total_error_squared), requested_enrollment)
+    return (math.sqrt(total_error_squared), tuple(requested_enrollment))
 
 def get_neighbors(students, capacities, prices):
     _, requested = clearing_error(prices, students, capacities)
@@ -107,7 +107,7 @@ def get_neighbors(students, capacities, prices):
         gradient.append(tentative)
     gradient = tuple(gradient)
 
-    max_gradient = max(gradient)
+    max_gradient = max([abs(x) for x in gradient])
 
     gradient_steps = [.1, .05, .01, .005, .001]
     for step in gradient_steps:
@@ -115,16 +115,21 @@ def get_neighbors(students, capacities, prices):
         err, enrollment = clearing_error(curr_neighbor, students, capacities)
         neighbors.append((err, enrollment, curr_neighbor))
     
-    # IMPLEMENT INDIVIDUAL PRICE ADJUSTMENTS
+    for i, diff in enumerate(gradient):
+        if diff < 0:
+            tmp_prices = list(prices)
+            tmp_prices[i] = 0
+            err, enrollment = clearing_error(tuple(tmp_prices), students, capacities)
+            neighbors.append((err, enrollment, tuple(tmp_prices)))
 
     neighbors.sort(key=lambda x: x[0])
 
     return neighbors
 
-def market_clear_search(students, capacities, max_budget):
+def market_clear_search(students, capacities, max_budget, max_k=10000):
     best_error = -1
     best_prices = None
-    for iter in range(10000):
+    for iter in range(max_k):
         p_curr = tuple([random.random() * max_budget for i in range(len(capacities))])
         search_error = clearing_error(p_curr, students, capacities)[0]
         tabu = set()
@@ -151,7 +156,11 @@ def market_clear_search(students, capacities, max_budget):
                 if search_error < best_error or best_error == -1:
                     best_error = search_error
                     best_prices = neighbor
+        
+        print(best_error)
 
-    return best_prices
+    return best_error, best_prices
 
-print(market_clear_search(students, capacities, 1 + (1 / num_students)))
+
+err, prices = market_clear_search(students, capacities, 1 + (1 / num_students), 20)
+print(err, prices)
